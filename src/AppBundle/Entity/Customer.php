@@ -72,7 +72,7 @@ class Customer
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="customer_id", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="customer", cascade={"persist","remove"})
      *
      * @Assert\Valid()
      */

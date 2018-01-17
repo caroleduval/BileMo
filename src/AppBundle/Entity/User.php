@@ -47,6 +47,7 @@ class User
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer", inversedBy="users")
+     *
      */
     private $customer;
 

@@ -4,11 +4,16 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="phone")
+ *
+ * @ExclusionPolicy("all")
+ *
  */
 class Phone
 {
@@ -16,6 +21,9 @@ class Phone
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Expose
+     *
      */
     protected $id;
 
@@ -25,6 +33,9 @@ class Phone
      * @ORM\Column(name="brand", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Expose
+     *
      */
     private $brand;
 
@@ -34,6 +45,9 @@ class Phone
      * @ORM\Column(name="model", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Expose
+     *
      */
     private $model;
 
@@ -43,6 +57,8 @@ class Phone
      * @ORM\Column(name="reference", type="string", length=25)
      *
      * @Assert\NotBlank()
+     *
+     * @Expose
      */
     private $reference;
 
@@ -50,6 +66,8 @@ class Phone
      * @var string
      *
      * @ORM\Column(name="op_system", type="string", length=10)
+     *
+     * @Expose
      */
     private $opSystem;
 
@@ -59,6 +77,8 @@ class Phone
      * @ORM\Column(name="storage", type="integer")
      *
      * @Assert\NotBlank()
+     *
+     * @Expose
      */
     private $storage;
 
@@ -66,6 +86,8 @@ class Phone
      * @var string
      *
      * @ORM\Column(name="color", type="string", length=25)
+     *
+     * @Expose
      */
     private $color;
 
@@ -75,6 +97,8 @@ class Phone
      * @ORM\Column(name="description", type="text")
      *
      * @Assert\NotBlank(message="Veuillez décrire (même brièvement) le téléphone SVP.")
+     *
+     * @Expose
      */
     private $description;
     /**
@@ -83,6 +107,8 @@ class Phone
      * @ORM\Column(name="price", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Expose
      */
     private $price;
 
