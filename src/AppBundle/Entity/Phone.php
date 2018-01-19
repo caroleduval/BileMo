@@ -5,15 +5,22 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as Serializer;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PhoneRepository")
  * @ORM\Table(name="phone")
  *
- * @ExclusionPolicy("all")
  *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *     "app_phone_show",
+ *     parameters = { "id" = "expr(object.getId())" },
+ *     absolute = true
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(groups = {"Default"})
+ * )
  */
 class Phone
 {
@@ -22,7 +29,7 @@ class Phone
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Expose
+     * @Serializer\Groups({"list","details"})
      *
      */
     protected $id;
@@ -34,7 +41,7 @@ class Phone
      *
      * @Assert\NotBlank()
      *
-     * @Expose
+     * @Serializer\Groups({"list","details"})
      *
      */
     private $brand;
@@ -46,7 +53,7 @@ class Phone
      *
      * @Assert\NotBlank()
      *
-     * @Expose
+     * @Serializer\Groups({"list","details"})
      *
      */
     private $model;
@@ -58,7 +65,7 @@ class Phone
      *
      * @Assert\NotBlank()
      *
-     * @Expose
+     * @Serializer\Groups({"details"})
      */
     private $reference;
 
@@ -67,7 +74,7 @@ class Phone
      *
      * @ORM\Column(name="op_system", type="string", length=10)
      *
-     * @Expose
+     * @Serializer\Groups({"details"})
      */
     private $opSystem;
 
@@ -78,7 +85,7 @@ class Phone
      *
      * @Assert\NotBlank()
      *
-     * @Expose
+     * @Serializer\Groups({"list","details"})
      */
     private $storage;
 
@@ -87,7 +94,7 @@ class Phone
      *
      * @ORM\Column(name="color", type="string", length=25)
      *
-     * @Expose
+     * @Serializer\Groups({"list","details"})
      */
     private $color;
 
@@ -98,19 +105,9 @@ class Phone
      *
      * @Assert\NotBlank(message="Veuillez décrire (même brièvement) le téléphone SVP.")
      *
-     * @Expose
+     * @Serializer\Groups({"details"})
      */
     private $description;
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="price", type="string", length=255)
-     *
-     * @Assert\NotBlank()
-     *
-     * @Expose
-     */
-    private $price;
 
     public function getId()
     {
@@ -285,29 +282,5 @@ class Phone
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set price
-     *
-     * @param string $price
-     *
-     * @return Phone
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * Get price
-     *
-     * @return float
-     */
-    public function getPrice()
-    {
-        return $this->price;
     }
 }

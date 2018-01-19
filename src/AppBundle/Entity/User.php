@@ -4,11 +4,39 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use JMS\Serializer\Annotation as Serializer;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @ORM\Table(name="user")
+ *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *     "app_user_show",
+ *     parameters = { "id" = "expr(object.getId())" },
+ *     absolute = true
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(groups={"list"})
+ * )
+ * @Hateoas\Relation(
+ *      "delete",
+ *      href = @Hateoas\Route(
+ *          "app_user_delete",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      ),
+ *     exclusion = @Hateoas\Exclusion(groups={"list"})
+ * )
+ * @Hateoas\Relation(
+ *      "create",
+ *      href = @Hateoas\Route(
+ *          "app_user_add",
+ *          absolute = true
+ *      ),
+ *     exclusion = @Hateoas\Exclusion()
+ * )
  *
  */
 class User
@@ -17,6 +45,8 @@ class User
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Serializer\Groups({"list"})
      */
     protected $id;
 
@@ -26,6 +56,8 @@ class User
      * @ORM\Column(name="name", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Serializer\Groups({"list","details"})
      */
     private $name;
 
@@ -35,6 +67,8 @@ class User
      * @ORM\Column(name="first_name", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Serializer\Groups({"list","details"})
      */
     private $firstName;
 
@@ -42,6 +76,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=10)
+     *
+     * @Serializer\Groups({"details"})
      */
     private $gender;
 
@@ -57,9 +93,11 @@ class User
      * @ORM\Column(name="email", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Serializer\Groups({"details"})
      */
-
     private $email;
+
     /**
      * @var string
      *
@@ -75,6 +113,8 @@ class User
      * @ORM\Column(name="address", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Serializer\Groups({"details"})
      */
     private $address;
 
@@ -84,6 +124,8 @@ class User
      * @ORM\Column(name="town", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Serializer\Groups({"list","details"})
      */
     private $town;
 
@@ -93,6 +135,8 @@ class User
      * @ORM\Column(name="postcode", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Serializer\Groups({"details"})
      */
     private $postcode;
 

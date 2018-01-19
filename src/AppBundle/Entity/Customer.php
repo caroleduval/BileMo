@@ -5,11 +5,15 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="customer")
+ *
+ * @ExclusionPolicy("all")
  */
 class Customer
 {
@@ -26,6 +30,8 @@ class Customer
      * @ORM\Column(name="name", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Expose
      */
     private $name;
     /**

@@ -3,26 +3,62 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Phone;
-use AppBundle\Representation\Phones;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\View\View;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Hateoas\Configuration\Route;
+use Hateoas\Representation\Factory\PagerfantaFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 class PhoneController extends Controller
 {
-
     /**
      * @Rest\Get("/phones", name="app_phone_list")
-     * @Rest\View
+     * @Rest\QueryParam(
+     *     name="page",
+     *     requirements="\d+",
+     *     default="1",
+     *     description="Page on demand"
+     * )
+     * @Rest\QueryParam(
+     *     name="order",
+     *     requirements="asc|desc",
+     *     default="asc",
+     *     description="Sort order (asc or desc)"
+     * )
+     * @Rest\QueryParam(
+     *     name="limit",
+     *     requirements="\d+",
+     *     default="5",
+     *     description="Max number of phones per page."
+     * )
+     * @Rest\QueryParam(
+     *     name="offset",
+     *     requirements="\d+",
+     *     default="1",
+     *     description="The pagination offset"
+     * )
+     * @Rest\View()
      */
-    public function listAction(EntityManagerInterface $em, Request $request)
+    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $em)
     {
-        $phones = $em->getRepository(Phone::class)->findAll();
+        $pager = $em->getRepository(Phone::class)->search(
+            $paramFetcher->get('order'),
+            $paramFetcher->get('limit'),
+            $paramFetcher->get('offset')
+        );
 
-        return $phones;
+        $page=($request->get("page"))?$request->get("page"):1;
+        $pager->setCurrentPage($page);
+
+        $pagerfantaFactory   = new PagerfantaFactory();
+        $paginatedCollection = $pagerfantaFactory->createRepresentation(
+            $pager,
+            new Route('app_phone_list', array())
+        );
+
+        return $paginatedCollection;
     }
 
     /**
@@ -31,10 +67,21 @@ class PhoneController extends Controller
      *     name = "app_phone_show",
      *     requirements = {"id"="\d+"}
      * )
-     * @Rest\View
+     * @Rest\View(serializerGroups ={"details"})
      */
     public function showAction(Phone $phone)
     {
         return $phone;
     }
 }
+
+///**
+// * @Rest\Get("/phones", name="app_phone_list")
+// * @Rest\View(serializerGroups ={"list"})
+// */
+//public function listAction(EntityManagerInterface $em)
+//{
+//    $phones = $em->getRepository(Phone::class)->findAll();
+//
+//    return $phones;
+//}
