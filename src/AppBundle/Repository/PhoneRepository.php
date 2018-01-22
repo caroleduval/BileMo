@@ -1,15 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kdu
- * Date: 16/01/2018
- * Time: 16:31
- */
 
 namespace AppBundle\Repository;
 
-
-class PhoneRepository
+class PhoneRepository extends AbstractRepository
 {
+    public function search($order = 'asc', $limit, $offset)
+    {
+        $qb = $this
+            ->createQueryBuilder('p')
+            ->select('p')
+            ->orderBy('p.id', $order)
+        ;
 
+        return $this->paginate($qb, $limit, $offset);
+    }
 }

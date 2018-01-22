@@ -22,3 +22,7 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
+
+    role_hierarchy:
+        ROLE_CUSTOMER: ROLE_USER
+        ROLE_ADMIN:    [ROLE_USER, ROLE_CUSTOMER]
