@@ -2,6 +2,12 @@
 # https://symfony.com/doc/current/security.html
 security:
 
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+
+    role_hierarchy:
+        ROLE_CUSTOMER: ROLE_USER
+
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         in_memory:
@@ -14,15 +20,14 @@ security:
             security: false
 
         main:
-            anonymous: ~
-            # activate different ways to authenticate
+            pattern:   ^/
+            anonymous: true
+            logout_on_user_change: true
+                # activate different ways to authenticate
 
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-            #http_basic: ~
+                # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+                #http_basic: ~
 
-            # https://symfony.com/doc/current/security/form_login_setup.html
-            #form_login: ~
+                # https://symfony.com/doc/current/security/form_login_setup.html
+                #form_login: ~
 
-    role_hierarchy:
-        ROLE_CUSTOMER: ROLE_USER
-        ROLE_ADMIN:    [ROLE_USER, ROLE_CUSTOMER]

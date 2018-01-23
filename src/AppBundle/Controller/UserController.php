@@ -111,7 +111,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @Rest\View(StatusCode = 204)
+     * @Rest\View(StatusCode = 202)
      * @Rest\Delete(
      *     path = "/users/{id}",
      *     name = "app_user_delete",

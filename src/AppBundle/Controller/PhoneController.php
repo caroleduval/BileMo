@@ -5,11 +5,11 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Phone;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Hateoas\Configuration\Route;
 use Hateoas\Representation\Factory\PagerfantaFactory;
-use Symfony\Component\HttpFoundation\Request;
 
 class PhoneController extends Controller
 {
