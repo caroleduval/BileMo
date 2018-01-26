@@ -92,5 +92,5 @@ fos_oauth_server:
     auth_code_class:     AppBundle\Entity\AuthCode
     service:
         options:
-            access_token_lifetime: 3600
+            access_token_lifetime: 600000
         user_provider: user.provider

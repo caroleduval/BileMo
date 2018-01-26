@@ -79,18 +79,24 @@ class UserController extends FOSRestController
             return View::create(['message' => 'You are not allowed to access this resource'], Response::HTTP_FORBIDDEN);
         }
 
-
         return $user;
     }
+
     /**
      * @Rest\Post(
      *     path = "/users",
      *     name = "app_user_add"
      * )
+     * @Rest\QueryParam(
+     *     name="role",
+     *     requirements="user|admin",
+     *     default="user",
+     *     description="Type of user to be created"
+     * )
      * @Rest\View(StatusCode=201)
      * @ParamConverter("user", converter="fos_rest.request_body")
      */
-    public function createAction(User $user, EntityManagerInterface $em, ConstraintViolationList $violations)
+    public function createAction(ParamFetcherInterface $paramFetcher, User $user, EntityManagerInterface $em, ConstraintViolationList $violations, Request $request)
     {
         if (count($violations)) {
             $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
@@ -99,16 +105,24 @@ class UserController extends FOSRestController
             }
             throw new ResourceValidationException($message);
         }
+        $client = $this->get('security.token_storage')->getToken()->getUser()->getClient();
+        $user->setClient($client);
+
+        $type="ROLE_".strtoupper($paramFetcher->get('role'))."";
+        $user->setRoles([$type]);
+
+
         $em->persist($user);
         $em->flush();
         return $this->view(
             $user,
             Response::HTTP_CREATED,
             [
-                'Location' => $this->generateUrl('app_phone_show',['id' =>$user->getId()],UrlGeneratorInterface::ABSOLUTE_URL)
+                'Location' => $this->generateUrl('app_user_show',['id' =>$user->getId()],UrlGeneratorInterface::ABSOLUTE_URL)
             ]
         );
     }
+
     /**
      * @Rest\View(StatusCode = 204)
      * @Rest\Delete(

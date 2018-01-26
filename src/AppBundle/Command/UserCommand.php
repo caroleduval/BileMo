@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Client;
 
 class UserCommand extends ContainerAwareCommand
 {
@@ -20,6 +21,7 @@ class UserCommand extends ContainerAwareCommand
         $this
             ->setName('BM:user:create')
             ->setDescription('Create a user.')
+            ->addArgument('client', InputArgument::REQUIRED, 'Client_Id ?')
             ->addArgument('username', InputArgument::REQUIRED, 'Username ?')
             ->addArgument('email', InputArgument::REQUIRED, 'Email ?')
             ->addArgument('password', InputArgument::REQUIRED, 'Password ?')
@@ -29,6 +31,7 @@ class UserCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $client_id = $input->getArgument('client');
         $username = $input->getArgument('username');
         $email = $input->getArgument('email');
         $password = $input->getArgument('password');
@@ -37,10 +40,13 @@ class UserCommand extends ContainerAwareCommand
         $rolesArr=("y"==$admin)?array('ROLE_ADMIN'):array('ROLE_USER');
 
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $client=$em->getRepository(Client::class)->find($client_id);
+
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
         $user->setPassword($password);
+        $user->setClient($client);
         $user->setRoles($rolesArr);
 
         $em->persist($user);
@@ -56,6 +62,18 @@ class UserCommand extends ContainerAwareCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $questions = array();
+
+        if (!$input->getArgument('client')) {
+            $question = new Question('Please give the client Id:');
+            $question->setValidator(function ($client) {
+                if (empty($client)) {
+                    throw new \Exception('Client can not be empty');
+                }
+
+                return $client;
+            });
+            $questions['client'] = $question;
+        }
 
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username:');

@@ -87,8 +87,6 @@ class User implements UserInterface, \Serializable
      *
      * @ORM\Column(name="role", type="json_array")
      *
-     * @Assert\NotBlank()
-     *
      * @Serializer\Groups({"details"})
      */
     private $roles = [];
