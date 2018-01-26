@@ -4,30 +4,28 @@ security:
 
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
+        AppBundle\Entity\User: plaintext
 
-    role_hierarchy:
-        ROLE_CUSTOMER: ROLE_USER
-
-    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         in_memory:
             memory: ~
 
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
     firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
+        oauth_token:
+            pattern:    ^/oauth/v2/token
+            security:   false
+        api:
+            pattern:    ^/
+            fos_oauth:  true
+            stateless:  true
+            anonymous:  false
+
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
-            pattern:   ^/
-            anonymous: true
-            logout_on_user_change: true
-                # activate different ways to authenticate
-
-                # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-                #http_basic: ~
-
-                # https://symfony.com/doc/current/security/form_login_setup.html
-                #form_login: ~
-
+    access_control:
+        - { path: ^/users, roles: ROLE_ADMIN }

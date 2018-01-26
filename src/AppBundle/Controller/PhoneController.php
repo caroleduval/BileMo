@@ -6,6 +6,8 @@ use AppBundle\Entity\Phone;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\View\View as View;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Hateoas\Configuration\Route;
@@ -71,6 +73,9 @@ class PhoneController extends Controller
      */
     public function showAction(Phone $phone)
     {
+        if (empty($phone)) {
+            return View::create(['message' => 'Phone not found'], Response::HTTP_NOT_FOUND);
+        }
         return $phone;
     }
 }

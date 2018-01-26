@@ -19,7 +19,6 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *     parameters = { "id" = "expr(object.getId())" },
  *     absolute = true
  *     ),
- *     exclusion = @Hateoas\Exclusion(groups = {"Default"})
  * )
  */
 class Phone

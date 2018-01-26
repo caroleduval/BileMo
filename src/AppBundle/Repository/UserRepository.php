@@ -4,12 +4,12 @@ namespace AppBundle\Repository;
 
 class UserRepository extends AbstractRepository
 {
-    public function search($order = 'asc', $limit, $offset)
+    public function search($id, $limit, $offset)
     {
-        $qb = $this
-            ->createQueryBuilder('u')
-            ->select('u')
-            ->orderBy('u.name', $order)
+        $qb = $this->createQueryBuilder('u');
+
+        $qb->where('u.client = :id')
+            ->setParameter('id', $id)
         ;
 
         return $this->paginate($qb, $limit, $offset);

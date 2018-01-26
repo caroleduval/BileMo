@@ -5,16 +5,13 @@ namespace AppBundle\DataFixtures\ORM;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\User;
-use AppBundle\Entity\Customer;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Phone;
 
 class LoadData implements ORMFixtureInterface
 {
     public function load(ObjectManager $em)
     {
-        $CustomerRepo = $em->getRepository('AppBundle:Customer');
-
-        // Liste des noms de catégorie à ajouter
         $phone = new Phone();
         $phone->setBrand('Apple');
         $phone->setModel('iPhone X');
@@ -55,60 +52,41 @@ class LoadData implements ORMFixtureInterface
         $phone->setDescription('Smartphone débloqué 4G - Ecran 5,2 pouces - 128 Go - Nano - Dual -SIM - Android - Argent');
         $em->persist($phone);
 
-        $customer1 = new Customer();
-        $customer1->setName('SoLuxe');
-        $customer1->setEmail('admin@soluxe.com');
-        $customer1->setPassword('motdepasse');
-        $customer1->setAddress('113 rue de Rivoli');
-        $customer1->setTown('Paris');
-        $customer1->setPostcode('75001');
-        $em->persist($customer1);
+        $client1 = new Client();
+        $client1->setName('SoLuxe');
+        $em->persist($client1);
 
-        $customer2 = new Customer();
-        $customer2->setName('MyPhone');
-        $customer2->setEmail('admin@myphone.com');
-        $customer2->setPassword('motdepasse');
-        $customer2->setAddress('72 rue de Bercy');
-        $customer2->setTown('Paris');
-        $customer2->setPostcode('75014');
-        $em->persist($customer2);
+        $client2 = new Client();
+        $client2->setName('MyPhone');
+        $em->persist($client2);
 
         $em->flush();
 
         $user = new User();
-        $user->setName('Avêque');
-        $user->setfirstName('Cyril');
-        $user->setGender('Monsieur');
-        $user->setCustomer($customer1);
-        $user->setEmail('caveque@email.fr');
+        $user->setUsername('CAvêque');
+        $user->setClient($client1);
+        $user->setEmail('admin@soluxe.fr');
         $user->setPassword('motdepasse');
-        $user->setAddress('25,rue du pont');
-        $user->setTown('Le Mans');
-        $user->setPostcode('72000');
+        $user->setRoles('ROLE_ADMIN');
+        $user->setIsActive(1);
         $em->persist($user);
 
         $user = new User();
-        $user->setName('Martel');
-        $user->setfirstName('Martine');
-        $user->setGender('Madame');
-        $user->setCustomer($customer2);
+        $user->setUsername('MMartel');
+        $user->setClient($client2);
         $user->setEmail('mmartel@email.fr');
         $user->setPassword('motdepasse');
-        $user->setAddress('12,Bvd Oyon');
-        $user->setTown('Bordeaux');
-        $user->setPostcode('33000');
+        $user->setRoles('ROLE_ADMIN');
+        $user->setIsActive(1);
         $em->persist($user);
 
         $user = new User();
-        $user->setName('Monnet');
-        $user->setfirstName('Marine');
-        $user->setGender('Madame');
-        $user->setCustomer($customer1);
+        $user->setUsername('Monnet');
+        $user->setClient($client1);
         $user->setEmail('mmonnet@email.fr');
         $user->setPassword('motdepasse');
-        $user->setAddress('5,rue de Malidor');
-        $user->setTown('Tours');
-        $user->setPostcode('37000');
+        $user->setRoles('ROLE_USER');
+        $user->setIsActive(1);
         $em->persist($user);
 
         $em->flush();
