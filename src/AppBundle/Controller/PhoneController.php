@@ -59,7 +59,9 @@ class PhoneController extends Controller
             $pager,
             new Route('app_phone_list', array())
         );
-
+        if (empty($paginatedCollection)) {
+            return View::create(['message' => 'No phones found'], Response::HTTP_NOT_FOUND);
+        }
         return $paginatedCollection;
     }
 
@@ -79,14 +81,3 @@ class PhoneController extends Controller
         return $phone;
     }
 }
-
-///**
-// * @Rest\Get("/phones", name="app_phone_list")
-// * @Rest\View(serializerGroups ={"list"})
-// */
-//public function listAction(EntityManagerInterface $em)
-//{
-//    $phones = $em->getRepository(Phone::class)->findAll();
-//
-//    return $phones;
-//}

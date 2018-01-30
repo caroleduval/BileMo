@@ -1,17 +1,27 @@
 <?php
 
-namespace AppBundle\DataFixtures\ORM;
+namespace AppBundle\Command;
 
-use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Phone;
 
-class LoadData implements ORMFixtureInterface
+class LoadingDatasCommand extends ContainerAwareCommand
 {
-    public function load(ObjectManager $em)
+    protected function configure()
     {
+        $this
+            ->setName('app:import-fixtures')
+            ->setDescription('Imports datas into Client, User and Phone tables');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+
         $phone = new Phone();
         $phone->setBrand('Apple');
         $phone->setModel('iPhone X');

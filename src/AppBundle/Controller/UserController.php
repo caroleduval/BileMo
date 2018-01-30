@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
@@ -43,7 +44,7 @@ class UserController extends FOSRestController
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $em)
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $id=$user->getClient()->getId();
         $pager = $em->getRepository(User::class)->search(
             $id,
@@ -73,7 +74,7 @@ class UserController extends FOSRestController
             return View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $admin = $this->get('security.token_storage')->getToken()->getUser();
+        $admin = $this->getUser();
 
         if (!$approver->isGranted($user, $admin)){
             return View::create(['message' => 'You are not allowed to access this resource'], Response::HTTP_FORBIDDEN);
@@ -105,7 +106,7 @@ class UserController extends FOSRestController
             }
             throw new ResourceValidationException($message);
         }
-        $client = $this->get('security.token_storage')->getToken()->getUser()->getClient();
+        $client = $this->getUser()->getClient();
         $user->setClient($client);
 
         $type="ROLE_".strtoupper($paramFetcher->get('role'))."";
@@ -137,7 +138,7 @@ class UserController extends FOSRestController
             return View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $admin = $this->get('security.token_storage')->getToken()->getUser();
+        $admin = $this->getUser();
 
         if (!$approver->isGranted($user, $admin)){
             return View::create(['message' => 'You are not allowed to access this resource'], Response::HTTP_FORBIDDEN);

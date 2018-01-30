@@ -3,16 +3,90 @@
 namespace Tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Client;
 
 class UserControllerTest extends WebTestCase
 {
+    private $client = null;
+
+    public function setUp()
+    {
+        $this->client = static::createClient();
+    }
+
+    private function getToken($oauthHeaders)
+    {
+        $crawler = $this->client->request('GET', '/oauth/v2/token', $oauthHeaders);
+        $data = $this->client->getResponse()->getContent();
+        $json = json_decode($data);
+        $accessToken= $json->{'access_token'};
+
+        return $accessToken;
+    }
+
+    private function getTokenAsAdmin()
+    {
+        $oauthHeaders = [
+            "client_id" => "1_45n6woxab000o8oc0w0oksgwo8s44w0wkokkcgsc0kwggos8gk",
+            "client_secret" => "3jzxkn39e3okgs40o48ssg80wgcsww4gwgco8k4ko80g08ows0",
+            "grant_type" => "password",
+            "username" => "Admin_SL",
+            "password" => "motdepasse"
+        ];
+
+        $accessToken=$this->getToken($oauthHeaders);
+
+        return $accessToken;
+    }
+
+    private function getTokenAsUser()
+    {
+        $oauthHeaders = [
+            "client_id" => "1_45n6woxab000o8oc0w0oksgwo8s44w0wkokkcgsc0kwggos8gk",
+            "client_secret" => "3jzxkn39e3okgs40o48ssg80wgcsww4gwgco8k4ko80g08ows0",
+            "grant_type" => "password",
+            "username" => "User_SoLuxe1",
+            "password" => "motdepasse"
+        ];
+
+        $accessToken=$this->getToken($oauthHeaders);
+
+        return $accessToken;
+    }
+
+    public function testAttemptUserswithoutToken()
+    {
+        $crawler = $this->client->request('GET', '/users');
+        $datas=$this->client->getResponse();
+
+        $this->assertEquals(401, $datas->getStatusCode());
+    }
+
+    public function testAttemptUsersAsUser()
+    {
+        $accessToken = $this->getTokenAsUser();
+
+        $headers = array(
+            'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
+            'CONTENT_TYPE' => 'application/json'
+        );
+
+        $crawler = $this->client->request('GET', '/users');
+        $datas=$this->client->getResponse();
+
+        $this->assertEquals(401, $datas->getStatusCode());
+    }
+
     public function testGetUsersList()
     {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/users');
-        $datas=$client->getResponse();
+        $accessToken = $this->getTokenAsAdmin();
+
+        $headers = array(
+            'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
+            'CONTENT_TYPE' => 'application/json',
+        );
+
+        $crawler = $this->client->request('GET', '/users', array(), array(), $headers);
+        $datas=$this->client->getResponse();
 
         $this->assertEquals(200, $datas->getStatusCode());
         $data = json_decode($datas->getContent(), true);
@@ -22,57 +96,76 @@ class UserControllerTest extends WebTestCase
 
     public function testGetUser()
     {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/users/2');
-        $datas=$client->getResponse();
+        $accessToken = $this->getTokenAsAdmin();
+
+        $headers = array(
+            'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
+            'CONTENT_TYPE' => 'application/json',
+        );
+
+        $crawler = $this->client->request('GET', '/users/3', array(), array(), $headers);
+        $datas=$this->client->getResponse();
 
         $this->assertEquals(200, $datas->getStatusCode());
         $data = json_decode($datas->getContent(), true);
-        $this->assertArrayHasKey('first_name', $data);
-        $this->assertEquals('Martel',$data['name']);
+
+        $this->assertEquals('User_SoLuxe1',$data['username']);
     }
 
-//    public function testCreateUser()
-//    {
-//        $data = array(
-//            'name'=> 'Nom',
-//            'first_name'=> 'Prenom',
-//            'gender'=> 'Monsieur',
-//            'client'=> array(
-//                'name'=> 'SoLuxe',
-//                'email'=> 'admin@soluxe.com',
-//                'password'=> 'motdepasse',
-//                'address'=> '113 rue de Rivoli',
-//                'town'=> 'Paris',
-//                'postcode'=> '75001'
-//            ),
-//            'email'=> 'pnom@email.fr',
-//            'password'=> 'motdepasse',
-//            'address'=> 'adresse',
-//            'town'=> 'Ville',
-//            'postcode'=> '99999'
-//        );
-//
-//        $client = static::createClient();
-//        $client->request(
-//            'POST',
-//            '/users',
-//            array(),
-//            array(),
-//            array('CONTENT_TYPE' => 'application/json'),
-//            $data);
-//        $reponse=$client->getResponse();
-//
-//        $this->assertEquals(201, $reponse->getStatusCode());
-//        $this->assertContains('application/json', $reponse->headers);
-//    }
-//
-//    public function testDeleteUser()
-//    {
-//        $client = static::createClient();
-//        $crawler = $client->request('DELETE', '/users/2');
-//        $datas=$client->getResponse();
-//
-//        $this->assertEquals(202, $datas->getStatusCode());
-//    }
+    public function testCreateUser()
+    {
+        $data = array(
+            'username'=> 'new_Username',
+            'email'=> 'new@email.fr',
+            'password'=> 'motdepasse'
+        );
+
+        $accessToken = $this->getTokenAsAdmin();
+
+        $headers = array(
+            'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
+            'CONTENT_TYPE' => 'application/json',
+        );
+
+        $crawler = $this->client->request('POST', '/users', array(), array(), $headers, json_encode($data));
+        $datas=$this->client->getResponse();
+
+        $this->assertEquals(201, $datas->getStatusCode());
+    }
+
+    public function testCreateAdmin()
+    {
+        $data = array(
+            'username'=> 'new_Admin',
+            'email'=> 'newA@email.fr',
+            'password'=> 'motdepasse'
+        );
+
+        $accessToken = $this->getTokenAsAdmin();
+
+        $headers = array(
+            'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
+            'CONTENT_TYPE' => 'application/json',
+        );
+
+        $crawler = $this->client->request('POST', '/users?role=admin', array(), array(), $headers, json_encode($data));
+        $datas=$this->client->getResponse();
+
+        $this->assertEquals(201, $datas->getStatusCode());
+    }
+
+    public function testDeleteUser()
+    {
+        $accessToken = $this->getTokenAsAdmin();
+
+        $headers = array(
+            'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
+            'CONTENT_TYPE' => 'application/json',
+        );
+
+        $crawler = $this->client->request('DELETE', '/users/6', array(), array(), $headers);
+        $datas=$this->client->getResponse();
+
+        $this->assertEquals(204, $datas->getStatusCode());
+    }
 }

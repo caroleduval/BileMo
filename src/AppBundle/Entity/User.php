@@ -53,6 +53,8 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
+     *
+     * @Serializer\Groups({"details"})
      */
     private $username;
 

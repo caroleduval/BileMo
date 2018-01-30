@@ -19,7 +19,7 @@ services:
         tags: ['controller.service_arguments']
 
     user.provider:
-        class: %user.provider.class%
+        class: '%user.provider.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
-            - %user.class%
+            - '%user.class%'
