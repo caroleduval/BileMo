@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as Serializer;
 use Hateoas\Configuration\Annotation as Hateoas;
@@ -39,7 +40,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  * )
  *
  */
-class User
+class User implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id
@@ -51,41 +52,11 @@ class User
     protected $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
-     *
-     * @Assert\NotBlank()
-     *
-     * @Serializer\Groups({"list","details"})
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="first_name", type="string", length=255)
-     *
-     * @Assert\NotBlank()
-     *
-     * @Serializer\Groups({"list","details"})
-     */
-    private $firstName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="gender", type="string", length=10)
+     * @ORM\Column(type="string", length=25, unique=true)
      *
      * @Serializer\Groups({"details"})
      */
-    private $gender;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer", inversedBy="users")
-     *
-     */
-    private $customer;
+    private $username;
 
     /**
      * @var string
@@ -108,37 +79,19 @@ class User
     private $password;
 
     /**
-     * @var string
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="users")
      *
-     * @ORM\Column(name="address", type="string", length=255)
-     *
-     * @Assert\NotBlank()
-     *
-     * @Serializer\Groups({"details"})
      */
-    private $address;
+    private $client;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="town", type="string", length=255)
-     *
-     * @Assert\NotBlank()
-     *
-     * @Serializer\Groups({"list","details"})
-     */
-    private $town;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="postcode", type="string", length=255)
-     *
-     * @Assert\NotBlank()
+     * @ORM\Column(name="role", type="json_array")
      *
      * @Serializer\Groups({"details"})
      */
-    private $postcode;
+    private $roles = [];
 
     /**
      * Get id
@@ -151,76 +104,28 @@ class User
     }
 
     /**
-     * Set name
+     * Set username
      *
-     * @param string $name
+     * @param string $username
      *
      * @return User
      */
-    public function setName($name)
+    public function setUsername($username)
     {
-        $this->name = $name;
+        $this->username = $username;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get username
      *
      * @return string
      */
-    public function getName()
+    public function getUsername()
     {
-        return $this->name;
+        return $this->username;
     }
-    /**
-     * Set name
-     *
-     * @param string $firstName
-     *
-     * @return User
-     */
-    public function setfirstName($firstName)
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * Set gender
-     *
-     * @param string $gender
-     *
-     * @return User
-     */
-    public function setGender($gender)
-    {
-        $this->gender = $gender;
-
-        return $this;
-    }
-
-    /**
-     * Get gender
-     *
-     * @return string
-     */
-    public function getGender()
-    {
-        return $this->gender;
-    }
-
     /**
      * Set email
      *
@@ -270,91 +175,75 @@ class User
     }
 
     /**
-     * Set address
-     *
-     * @param string $address
-     *
-     * @return User
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    /**
-     * Get address
-     *
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * Set town
-     *
-     * @param string $town
-     *
-     * @return User
-     */
-    public function setTown($town)
-    {
-        $this->town = $town;
-
-        return $this;
-    }
-
-    /**
-     * Get town
-     *
-     * @return string
-     */
-    public function getTown()
-    {
-        return $this->town;
-    }
-    /**
-     * Set postcode
-     *
-     * @param string $postcode
-     *
-     * @return User
-     */
-    public function setPostcode($postcode)
-    {
-        $this->postcode = $postcode;
-
-        return $this;
-    }
-
-    /**
-     * Get postcode
-     *
-     * @return string
-     */
-    public function getPostcode()
-    {
-        return $this->postcode;
-    }
-
-
-    /**
-     * @param Customer $customer
+     * @param Client $client
      * @return $this
      */
-    public function setCustomer(Customer $customer)
+    public function setClient(Client $client)
     {
-        $this->customer = $customer;
+        $this->client = $client;
         return $this;
     }
     /**
      * @return mixed
      */
-    public function getCustomer()
+    public function getClient()
     {
-        return $this->customer;
+        return $this->client;
+    }
+
+    /**
+     * Retourne les rôles de l'user
+     */
+    public function getRoles()
+    {
+        $roles = $this->roles;
+
+        // Afin d'être sûr qu'un user a toujours au moins 1 rôle
+        if (empty($roles)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+    }
+
+    public function getSalt()
+    {
+        // you *may* need a real salt depending on your encoder
+        // see section on salt below
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt
+            ) = unserialize($serialized);
     }
 }

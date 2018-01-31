@@ -5,11 +5,13 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Phone;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\View\View as View;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Hateoas\Configuration\Route;
 use Hateoas\Representation\Factory\PagerfantaFactory;
-use Symfony\Component\HttpFoundation\Request;
 
 class PhoneController extends Controller
 {
@@ -57,7 +59,9 @@ class PhoneController extends Controller
             $pager,
             new Route('app_phone_list', array())
         );
-
+        if (empty($paginatedCollection)) {
+            return View::create(['message' => 'No phones found'], Response::HTTP_NOT_FOUND);
+        }
         return $paginatedCollection;
     }
 
@@ -71,17 +75,9 @@ class PhoneController extends Controller
      */
     public function showAction(Phone $phone)
     {
+        if (empty($phone)) {
+            return View::create(['message' => 'Phone not found'], Response::HTTP_NOT_FOUND);
+        }
         return $phone;
     }
 }
-
-///**
-// * @Rest\Get("/phones", name="app_phone_list")
-// * @Rest\View(serializerGroups ={"list"})
-// */
-//public function listAction(EntityManagerInterface $em)
-//{
-//    $phones = $em->getRepository(Phone::class)->findAll();
-//
-//    return $phones;
-//}

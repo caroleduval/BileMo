@@ -20,6 +20,8 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
+            new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
+            new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
             new AppBundle\AppBundle(),
         ];
 
@@ -27,6 +29,7 @@ class AppKernel extends Kernel
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
+            $bundles[] = new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
 
             if ('dev' === $this->getEnvironment()) {
                 $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
