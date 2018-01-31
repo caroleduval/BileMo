@@ -93,4 +93,25 @@ fos_oauth_server:
     service:
         options:
             access_token_lifetime: 600000
+            token_type: Bearer
         user_provider: user.provider
+
+nelmio_api_doc:
+    areas:
+        path_patterns: # an array of regexps
+            - ^/phones(?!/doc$)
+            - ^/users(?!/doc$)
+    documentation:
+        info:
+            title: BileMo API Documentation
+            description: API for Phones Resources
+            version: 1.0.0
+        securityDefinitions:
+            bearerAuth:
+                type: oauth2
+                description: provides a password flow access_token
+                flow: password
+                tokenUrl: /oauth/v2/token
+                name: Authorization
+        security:
+            - bearerAuth: []

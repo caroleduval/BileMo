@@ -15,50 +15,33 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Hateoas\Configuration\Route;
-use Hateoas\Representation\Factory\PagerfantaFactory;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Swagger\Annotations as SWG;
 
 class UserController extends FOSRestController
 {
     /**
      * @Rest\Get("/users", name="app_user_list")
-     * @Rest\QueryParam(
-     *     name="page",
-     *     requirements="\d+",
-     *     default="1",
-     *     description="Page on demand"
+     * @Rest\View(serializerGroups ={"list"})
+     *
+     * @SWG\Tag(name="users")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the list of users linked to a client",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @Model(type=User::class)
+     *     )
      * )
-     * @Rest\QueryParam(
-     *     name="limit",
-     *     requirements="\d+",
-     *     default="5",
-     *     description="Max number of users per page."
-     * )
-     * @Rest\QueryParam(
-     *     name="offset",
-     *     requirements="\d+",
-     *     default="1",
-     *     description="The pagination offset"
-     * )
-     * @Rest\View()
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $em)
     {
         $user = $this->getUser();
         $id=$user->getClient()->getId();
-        $pager = $em->getRepository(User::class)->search(
-            $id,
-            $paramFetcher->get('limit'),
-            $paramFetcher->get('offset')
-        );
-        $page=($request->get("page"))?$request->get("page"):1;
-        $pager->setCurrentPage($page);
-        $pagerfantaFactory   = new PagerfantaFactory();
-        $paginatedCollection = $pagerfantaFactory->createRepresentation(
-            $pager,
-            new Route('app_user_list', array())
-        );
-        return $paginatedCollection;
+        $users = $em->getRepository(User::class)->findBy(
+            ['client' => $id]);
+
+        return $users;
     }
     /**
      * @Rest\Get(
@@ -67,6 +50,16 @@ class UserController extends FOSRestController
      *     requirements = {"id"="\d+"}
      * )
      * @Rest\View(serializerGroups ={"details"})
+     *
+     * @SWG\Tag(name="users")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the details of a user linked to a client",
+     *     @SWG\Schema(
+     *         type="object",
+     *         @Model(type=User::class)
+     *     )
+     * )
      */
     public function showAction(User $user, Approver $approver)
     {
@@ -96,6 +89,16 @@ class UserController extends FOSRestController
      * )
      * @Rest\View(StatusCode=201)
      * @ParamConverter("user", converter="fos_rest.request_body")
+     *
+     * @SWG\Tag(name="users")
+     * @SWG\Response(
+     *     response=201,
+     *     description="Create a user linked to a client",
+     *     @SWG\Schema(
+     *         type="object",
+     *         @Model(type=User::class)
+     *     )
+     * )
      */
     public function createAction(ParamFetcherInterface $paramFetcher, User $user, EntityManagerInterface $em, ConstraintViolationList $violations, Request $request)
     {
@@ -130,6 +133,16 @@ class UserController extends FOSRestController
      *     path = "/users/{id}",
      *     name = "app_user_delete",
      *     requirements = {"id"="\d+"}
+     * )
+     *
+     * @SWG\Tag(name="users")
+     * @SWG\Response(
+     *     response=204,
+     *     description="Delete a user linked to a client",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @Model(type=User::class)
+     *     )
      * )
      */
     public function deleteAction(User $user, EntityManagerInterface $em, Approver $approver)
