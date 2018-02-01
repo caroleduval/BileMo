@@ -8,9 +8,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as Serializer;
 use Hateoas\Configuration\Annotation as Hateoas;
 
+
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @ORM\Table(name="user")
+ *
  *
  * @Hateoas\Relation(
  *     "self",
@@ -22,13 +24,21 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *     exclusion = @Hateoas\Exclusion(groups={"list"})
  * )
  * @Hateoas\Relation(
+ *     "list",
+ *     href = @Hateoas\Route(
+ *     "app_user_list",
+ *     absolute = true
+ *     ),
+ *     exclusion = @Hateoas\Exclusion(groups={"details"})
+ * )
+ * @Hateoas\Relation(
  *      "delete",
  *      href = @Hateoas\Route(
  *          "app_user_delete",
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true
  *      ),
- *     exclusion = @Hateoas\Exclusion(groups={"list"})
+ *     exclusion = @Hateoas\Exclusion(groups={"details"})
  * )
  * @Hateoas\Relation(
  *      "create",
@@ -36,9 +46,8 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          "app_user_add",
  *          absolute = true
  *      ),
- *     exclusion = @Hateoas\Exclusion()
+ *     exclusion = @Hateoas\Exclusion(groups={"list","details"})
  * )
- *
  */
 class User implements UserInterface, \Serializable
 {
@@ -48,19 +57,21 @@ class User implements UserInterface, \Serializable
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      * @Serializer\Groups({"list"})
+     *
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(name="username", type="string", length=25, unique=true)
+     *
+     * @Assert\NotBlank()
      *
      * @Serializer\Groups({"list","details"})
+     *
      */
     private $username;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="email", type="string", length=255)
      *
      * @Assert\NotBlank()
@@ -70,23 +81,23 @@ class User implements UserInterface, \Serializable
     private $email;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="password", type="string", length=255)
      *
      * @Assert\NotBlank()
+     *
+     * @Serializer\Groups({"none"})
      */
     private $password;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="users")
      *
+     * @Serializer\Groups({"none"})
+     *
      */
     private $client;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="role", type="json_array")
      *
      * @Serializer\Groups({"details"})
