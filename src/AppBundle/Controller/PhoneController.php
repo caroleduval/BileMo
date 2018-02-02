@@ -80,9 +80,9 @@ class PhoneController extends FOSRestController
      * )
      * @Cache(smaxage="86400", public=true)
      */
-    public function showAction(Phone $phone)
+    public function showAction(Phone $phone=null)
     {
-        if (empty($phone)) {
+        if (empty($user)) {
             return View::create(['message' => 'Phone not found'], Response::HTTP_NOT_FOUND);
         }
         return $phone;

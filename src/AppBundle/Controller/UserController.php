@@ -8,6 +8,7 @@ use AppBundle\Service\Approver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -89,11 +90,11 @@ class UserController extends FOSRestController
      * )
      * @Cache(smaxage="86400", public=true)
      */
-    public function showAction(User $user, Approver $approver)
+    public function showAction(User $user=null, Approver $approver)
     {
         if (empty($user)) {
             return View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
-        }
+         }
 
         $admin = $this->getUser();
 

@@ -74,7 +74,7 @@ class User implements UserInterface, \Serializable
     /**
      * @ORM\Column(name="email", type="string", length=255)
      *
-     * @Assert\NotBlank()
+     * @Assert\Email(message = "The email '{{ value }}' is not a valid email.")
      *
      * @Serializer\Groups({"details"})
      */
