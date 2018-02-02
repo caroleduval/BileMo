@@ -14,14 +14,8 @@ class InitializeTestCommand extends ContainerAwareCommand
     {
         $this
             ->setName('test:initialize-BM')
-
-            // the short description shown while running "php bin/console list"
             ->setDescription('Initializes database for tests.')
-
-            // the full command description shown when running the command with
-            // the "--help" option
             ->setHelp('This command set up the test database and tables with datas that enabled the tests...')
-//            ->addOption('env', null, InputOption::VALUE_OPTIONAL,"environnement","test")
         ;
     }
 

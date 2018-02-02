@@ -92,13 +92,13 @@ class UserController extends FOSRestController
     public function showAction(User $user=null, Approver $approver)
     {
         if (empty($user)) {
-            return View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+            return $this->view(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
          }
 
         $admin = $this->getUser();
 
         if (!$approver->isGranted($user, $admin)){
-            return View::create(['message' => 'You are not allowed to access this resource'], Response::HTTP_FORBIDDEN);
+            return $this->view(['message' => 'You are not allowed to access this resource'], Response::HTTP_FORBIDDEN);
         }
 
         return $user;

@@ -82,8 +82,8 @@ class PhoneController extends FOSRestController
      */
     public function showAction(Phone $phone=null)
     {
-        if (empty($user)) {
-            return View::create(['message' => 'Phone not found'], Response::HTTP_NOT_FOUND);
+        if (empty($phone)) {
+            return $this->view(['message' => 'Phone not found'], Response::HTTP_NOT_FOUND);
         }
         return $phone;
     }

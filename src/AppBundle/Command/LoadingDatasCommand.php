@@ -67,7 +67,6 @@ class LoadingDatasCommand extends ContainerAwareCommand
         $client1->setRandomId('45n6woxab000o8oc0w0oksgwo8s44w0wkokkcgsc0kwggos8gk');
         $client1->setSecret('3jzxkn39e3okgs40o48ssg80wgcsww4gwgco8k4ko80g08ows0');
         $client1->setAllowedGrantTypes(["password"]);
-
         $em->persist($client1);
 
         $client2 = new Client();
@@ -75,7 +74,6 @@ class LoadingDatasCommand extends ContainerAwareCommand
         $client2->setRandomId('3yts5mebf8sgcs8k44o04kk4s4cgwccsss084g4gw0socks08s');
         $client2->setSecret('1tjx88y1m9okckcoo8o8c08gkkow0ssc8gwog00cwsoccko0w0');
         $client2->setAllowedGrantTypes(["password"]);
-
         $em->persist($client2);
 
         $em->flush();
