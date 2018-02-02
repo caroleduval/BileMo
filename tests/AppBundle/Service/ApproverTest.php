@@ -5,7 +5,6 @@ namespace Tests\AppBundle\Service;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Client;
 use AppBundle\Service\Approver;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PHPUnit\Framework\TestCase;
 
 class ApproverTest extends TestCase
