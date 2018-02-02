@@ -8,7 +8,7 @@ class UserRepository extends AbstractRepository
     {
         $qb = $this->createQueryBuilder('u');
 
-        $qb->where('u.client = :id')
+        $qb ->where('u.client = :id')
             ->setParameter('id', $id)
         ;
 

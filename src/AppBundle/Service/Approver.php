@@ -3,13 +3,12 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
-use AppBundle\Entity\Client;
 
 class Approver
 {
     public function isGranted(User $user, User $admin)
     {
-        if ($user->getClient()->getId()==$admin->getClient()->getId()){
+        if (in_array('ROLE_ADMIN', $admin->getRoles(), true) AND ($user->getClient()->getId()==$admin->getClient()->getId())){
             return true;
         }
         else {

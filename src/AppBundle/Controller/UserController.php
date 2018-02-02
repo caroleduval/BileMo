@@ -6,43 +6,71 @@ use AppBundle\Entity\User;
 use AppBundle\Exception\ResourceValidationException;
 use AppBundle\Service\Approver;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\View\View as View;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
+use Hateoas\Configuration\Route;
+use Hateoas\Representation\Factory\PagerfantaFactory;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
+
 
 class UserController extends FOSRestController
 {
     /**
      * @Rest\Get("/users", name="app_user_list")
-     * @Rest\View(serializerGroups ={"list"})
-     *
-     * @SWG\Tag(name="users")
-     * @SWG\Response(
-     *     response=200,
-     *     description="Returns the list of users linked to a client",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=User::class)
-     *     )
+     * @Rest\QueryParam(
+     *     name="page",
+     *     requirements="\d+",
+     *     default="1",
+     *     description="Page on demand"
      * )
+     * @Rest\QueryParam(
+     *     name="limit",
+     *     requirements="\d+",
+     *     default="5",
+     *     description="Max number of users per page."
+     * )
+     * @Rest\QueryParam(
+     *     name="offset",
+     *     requirements="\d+",
+     *     default="1",
+     *     description="The pagination offset"
+     * )
+     * @Rest\View(serializerGroups ={"Default","list"})
+     *
+     * @Cache(smaxage="3600", public=true)
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $em)
     {
         $user = $this->getUser();
         $id=$user->getClient()->getId();
-        $users = $em->getRepository(User::class)->findBy(
-            ['client' => $id]);
+        $pager = $em->getRepository(User::class)->search(
+            $id,
+            $paramFetcher->get('limit'),
+            $paramFetcher->get('offset')
+        );
 
-        return $users;
+
+        $page=($request->get("page"))?$request->get("page"):1;
+        $pager->setCurrentPage($page);
+        $pagerfantaFactory   = new PagerfantaFactory();
+        $paginatedCollection = $pagerfantaFactory->createRepresentation(
+            $pager,
+            new Route('app_user_list', array())
+        );
+
+        return $paginatedCollection;
     }
+
     /**
      * @Rest\Get(
      *     path = "/users/{id}",
@@ -60,12 +88,13 @@ class UserController extends FOSRestController
      *         @Model(type=User::class)
      *     )
      * )
+     * @Cache(smaxage="86400", public=true)
      */
-    public function showAction(User $user, Approver $approver)
+    public function showAction(User $user=null, Approver $approver)
     {
         if (empty($user)) {
             return View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
-        }
+         }
 
         $admin = $this->getUser();
 
@@ -157,9 +186,7 @@ class UserController extends FOSRestController
             return View::create(['message' => 'You are not allowed to access this resource'], Response::HTTP_FORBIDDEN);
         }
 
-        if ($user){
-            $em->remove($user);
-            $em->flush();
-        }
+        $em->remove($user);
+        $em->flush();
     }
 }
