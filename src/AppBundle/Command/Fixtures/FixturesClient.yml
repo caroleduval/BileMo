@@ -1,0 +1,11 @@
+Client :
+    client1:
+        name : SoLuxe
+        randomid : 45n6woxab000o8oc0w0oksgwo8s44w0wkokkcgsc0kwggos8gk
+        secret : 3jzxkn39e3okgs40o48ssg80wgcsww4gwgco8k4ko80g08ows0
+        type : ['password']
+    client2:
+        name : MyPhone
+        randomid : 3yts5mebf8sgcs8k44o04kk4s4cgwccsss084g4gw0socks08s
+        secret : 1tjx88y1m9okckcoo8o8c08gkkow0ssc8gwog00cwsoccko0w0
+        type : ['password']

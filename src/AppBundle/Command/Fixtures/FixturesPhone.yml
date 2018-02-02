@@ -1,0 +1,33 @@
+Phone :
+    phone1:
+        brand : Apple
+        model : iPhone X
+        ref : IPHXSIL64
+        opsyst : iOS
+        storage : 64
+        color : argent
+        descr : Smartphone débloqué 4G - Ecran 5,8 pouces - 64 Go - Nano-SIM - iOS - Argent
+    phone2:
+        brand : Samsung
+        model : Galaxy Note8
+        ref : GALN8BLK64
+        opsyst : Android
+        storage : 64
+        color : noir
+        descr : Smartphone débloqué 4G - Ecran 6,3 pouces - 64 Go - 6 Go RAM - Simple Nano-SIM - Android Nougat 7.11 - Noir Carbone
+    phone3:
+        brand : Sony
+        model : Xperia XZ1
+        ref : XZ1BLK64
+        opsyst : Android
+        storage : 64
+        color : noir
+        descr : Smartphone débloqué 4G - Ecran 5,2 pouces - 64 Go - Nano - Dual -SIM - Android - Noir
+    phone4:
+        brand : Huawei
+        model : P10 Plus
+        ref : P10SILK128
+        opsyst : Android
+        storage : 128
+        color : argent
+        descr : Smartphone débloqué 4G - Ecran 5,2 pouces - 128 Go - Nano - Dual -SIM - Android - Argent

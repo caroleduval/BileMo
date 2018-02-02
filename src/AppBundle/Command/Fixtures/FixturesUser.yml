@@ -1,0 +1,31 @@
+User :
+    user1:
+        username : Admin_SL
+        client : 1
+        email : admin@soluxe.fr
+        password : motdepasse
+        roles : ['ROLE_ADMIN']
+    user2:
+        username : Admin_MP
+        client : 2
+        email : admin@myphone.fr
+        password : motdepasse
+        roles : ['ROLE_ADMIN']
+    user3:
+        username : User_SoLuxe1
+        client : 1
+        email : user1@email.fr
+        password : motdepasse
+        roles : ['ROLE_USER']
+    user4:
+        username : User_SoLuxe2
+        client : 1
+        email : user2@email.fr
+        password : motdepasse
+        roles : ['ROLE_USER']
+    user5:
+        username : User_MyPhone1
+        client : 2
+        email : user3@email.fr
+        password : motdepasse
+        roles : ['ROLE_USER']
