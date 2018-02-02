@@ -10,7 +10,7 @@ use AppBundle\Entity\Phone;
 
 class LoadData implements ORMFixtureInterface
 {
-    public function load(ObjectManager $em)
+    public function load(ObjectManager $emi)
     {
         $phone = new Phone();
         $phone->setBrand('Apple');
@@ -20,7 +20,7 @@ class LoadData implements ORMFixtureInterface
         $phone->setStorage(64);
         $phone->setColor('argent');
         $phone->setDescription('Smartphone débloqué 4G - Ecran 5,8 pouces - 64 Go - Nano-SIM - iOS - Argent');
-        $em->persist($phone);
+        $emi->persist($phone);
 
         $phone = new Phone();
         $phone->setBrand('Samsung');
@@ -30,7 +30,7 @@ class LoadData implements ORMFixtureInterface
         $phone->setStorage(64);
         $phone->setColor('noir');
         $phone->setDescription('Smartphone débloqué 4G - Ecran 6,3 pouces - 64 Go - 6 Go RAM - Simple Nano-SIM - Android Nougat 7.11 - Noir Carbone');
-        $em->persist($phone);
+        $emi->persist($phone);
 
         $phone = new Phone();
         $phone->setBrand('Sony');
@@ -40,7 +40,7 @@ class LoadData implements ORMFixtureInterface
         $phone->setStorage(64);
         $phone->setColor('noir');
         $phone->setDescription('Smartphone débloqué 4G - Ecran 5,2 pouces - 64 Go - Nano - Dual -SIM - Android - Noir');
-        $em->persist($phone);
+        $emi->persist($phone);
 
         $phone = new Phone();
         $phone->setBrand('Huawei');
@@ -50,7 +50,7 @@ class LoadData implements ORMFixtureInterface
         $phone->setStorage(128);
         $phone->setColor('argent');
         $phone->setDescription('Smartphone débloqué 4G - Ecran 5,2 pouces - 128 Go - Nano - Dual -SIM - Android - Argent');
-        $em->persist($phone);
+        $emi->persist($phone);
 
         $client1 = new Client();
         $client1->setName('SoLuxe');
@@ -58,7 +58,7 @@ class LoadData implements ORMFixtureInterface
         $client1->setSecret('3jzxkn39e3okgs40o48ssg80wgcsww4gwgco8k4ko80g08ows0');
         $client1->setAllowedGrantTypes(["password"]);
 
-        $em->persist($client1);
+        $emi->persist($client1);
 
         $client2 = new Client();
         $client2->setName('MyPhone');
@@ -66,9 +66,9 @@ class LoadData implements ORMFixtureInterface
         $client2->setSecret('1tjx88y1m9okckcoo8o8c08gkkow0ssc8gwog00cwsoccko0w0');
         $client2->setAllowedGrantTypes(["password"]);
 
-        $em->persist($client2);
+        $emi->persist($client2);
 
-        $em->flush();
+        $emi->flush();
 
         $user = new User();
         $user->setUsername('Admin_SL');
@@ -76,7 +76,7 @@ class LoadData implements ORMFixtureInterface
         $user->setEmail('admin@soluxe.fr');
         $user->setPassword('motdepasse');
         $user->setRoles(['ROLE_ADMIN']);
-        $em->persist($user);
+        $emi->persist($user);
 
         $user = new User();
         $user->setUsername('Admin_MP');
@@ -84,7 +84,7 @@ class LoadData implements ORMFixtureInterface
         $user->setEmail('admin@email.fr');
         $user->setPassword('motdepasse');
         $user->setRoles(['ROLE_ADMIN']);
-        $em->persist($user);
+        $emi->persist($user);
 
         $user = new User();
         $user->setUsername('User_SoLuxe1');
@@ -92,7 +92,7 @@ class LoadData implements ORMFixtureInterface
         $user->setEmail('user1@email.fr');
         $user->setPassword('motdepasse');
         $user->setRoles(['ROLE_USER']);
-        $em->persist($user);
+        $emi->persist($user);
 
         $user = new User();
         $user->setUsername('User_SoLuxe2');
@@ -100,7 +100,7 @@ class LoadData implements ORMFixtureInterface
         $user->setEmail('user2@email.fr');
         $user->setPassword('motdepasse');
         $user->setRoles(['ROLE_USER']);
-        $em->persist($user);
+        $emi->persist($user);
 
         $user = new User();
         $user->setUsername('User_MyPhone1');
@@ -108,7 +108,7 @@ class LoadData implements ORMFixtureInterface
         $user->setEmail('user3@email.fr');
         $user->setPassword('motdepasse');
         $user->setRoles(['ROLE_USER']);
-        $em->persist($user);
-        $em->flush();
+        $emi->persist($user);
+        $emi->flush();
     }
 }

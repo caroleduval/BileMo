@@ -47,12 +47,12 @@ class UserController extends FOSRestController
      *
      * @Cache(smaxage="3600", public=true)
      */
-    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $em)
+    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $emi)
     {
         $user = $this->getUser();
 
         $id=$user->getClient()->getId();
-        $pager = $em->getRepository(User::class)->search(
+        $pager = $emi->getRepository(User::class)->search(
             $id,
             $paramFetcher->get('limit'),
             $paramFetcher->get('offset')
@@ -128,7 +128,7 @@ class UserController extends FOSRestController
      *     )
      * )
      */
-    public function createAction(ParamFetcherInterface $paramFetcher, User $user, EntityManagerInterface $em, ConstraintViolationList $violations)
+    public function createAction(ParamFetcherInterface $paramFetcher, User $user, EntityManagerInterface $emi, ConstraintViolationList $violations)
     {
         if (count($violations)) {
             $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
@@ -144,8 +144,8 @@ class UserController extends FOSRestController
         $user->setRoles([$type]);
 
 
-        $em->persist($user);
-        $em->flush();
+        $emi->persist($user);
+        $emi->flush();
         return $this->view(
             $user,
             Response::HTTP_CREATED,
@@ -173,7 +173,7 @@ class UserController extends FOSRestController
      *     )
      * )
      */
-    public function deleteAction(User $user, EntityManagerInterface $em, Approver $approver)
+    public function deleteAction(User $user, EntityManagerInterface $emi, Approver $approver)
     {
         if (empty($user)) {
             return $this->view(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
@@ -185,7 +185,7 @@ class UserController extends FOSRestController
             return $this->view(['message' => 'You are not allowed to access this resource'], Response::HTTP_FORBIDDEN);
         }
 
-        $em->remove($user);
-        $em->flush();
+        $emi->remove($user);
+        $emi->flush();
     }
 }

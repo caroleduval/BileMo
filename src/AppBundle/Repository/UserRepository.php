@@ -6,12 +6,12 @@ class UserRepository extends AbstractRepository
 {
     public function search($id, $limit, $offset)
     {
-        $qb = $this->createQueryBuilder('u');
+        $qbd = $this->createQueryBuilder('u');
 
-        $qb ->where('u.client = :id')
+        $qbd ->where('u.client = :id')
             ->setParameter('id', $id)
         ;
 
-        return $this->paginate($qb, $limit, $offset);
+        return $this->paginate($qbd, $limit, $offset);
     }
 }

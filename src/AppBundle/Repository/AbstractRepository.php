@@ -9,13 +9,13 @@ use Pagerfanta\Pagerfanta;
 
 abstract class AbstractRepository extends EntityRepository
 {
-    protected function paginate(QueryBuilder $qb, $limit, $offset)
+    protected function paginate(QueryBuilder $qbd, $limit, $offset)
     {
         if ($limit==0 || $offset ==0 ) {
             throw new \LogicException('$limit & $offset must be greater than 0.');
         }
 
-        $pager = new Pagerfanta(new DoctrineORMAdapter($qb));
+        $pager = new Pagerfanta(new DoctrineORMAdapter($qbd));
         $currentPage = ceil(($offset + 1) / $limit);
 
         $pager->setCurrentPage($currentPage);

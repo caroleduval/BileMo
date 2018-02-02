@@ -6,11 +6,11 @@ class PhoneRepository extends AbstractRepository
 {
     public function search($limit, $offset)
     {
-        $qb = $this
+        $qbd = $this
             ->createQueryBuilder('p')
             ->select('p')
         ;
 
-        return $this->paginate($qb, $limit, $offset);
+        return $this->paginate($qbd, $limit, $offset);
     }
 }

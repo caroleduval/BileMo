@@ -41,9 +41,9 @@ class PhoneController extends FOSRestController
      *
      * @Cache(smaxage="3600", public=true)
      */
-    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $em)
+    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $emi)
     {
-        $pager = $em->getRepository(Phone::class)->search(
+        $pager = $emi->getRepository(Phone::class)->search(
             $paramFetcher->get('limit'),
             $paramFetcher->get('offset')
         );

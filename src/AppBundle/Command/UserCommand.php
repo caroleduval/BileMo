@@ -39,8 +39,8 @@ class UserCommand extends ContainerAwareCommand
 
         $rolesArr=("y"==$admin)?array('ROLE_ADMIN'):array('ROLE_USER');
 
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $client=$em->getRepository(Client::class)->find($client_id);
+        $emi = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $client=$emi->getRepository(Client::class)->find($client_id);
 
         $user = new User();
         $user->setUsername($username);
@@ -49,8 +49,8 @@ class UserCommand extends ContainerAwareCommand
         $user->setClient($client);
         $user->setRoles($rolesArr);
 
-        $em->persist($user);
-        $em->flush();
+        $emi->persist($user);
+        $emi->flush();
 
 
         $output->writeln(sprintf('Created user <comment>%s</comment>', $username));
