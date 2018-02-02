@@ -28,7 +28,7 @@ class UserProvider implements UserProviderInterface
                 'Unable to find an active User object identified by "%s"',
                 $username
             );
-            throw new NotFoundHttpException("Page not found");
+            throw new NotFoundHttpException($message);
         }
         return $user;
     }
