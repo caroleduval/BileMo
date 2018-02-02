@@ -2,4 +2,3 @@ checks:
   php:
     excluded_dependencies:
         - symfony
-

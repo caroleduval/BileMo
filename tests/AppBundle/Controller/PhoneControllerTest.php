@@ -23,7 +23,7 @@ class PhoneControllerTest extends WebTestCase
             "password" => "motdepasse"
         ];
 
-        $crawler = $this->client->request('GET', '/oauth/v2/token', $oauthHeaders);
+        $this->client->request('GET', '/oauth/v2/token', $oauthHeaders);
         $data = $this->client->getResponse()->getContent();
         $json = json_decode($data);
         $accessToken= $json->{'access_token'};
@@ -33,7 +33,7 @@ class PhoneControllerTest extends WebTestCase
 
     public function testGetPhonesListwithoutToken()
     {
-        $crawler = $this->client->request('GET', '/phones');
+        $this->client->request('GET', '/phones');
         $datas=$this->client->getResponse();
 
         $this->assertEquals(401, $datas->getStatusCode());
@@ -48,7 +48,7 @@ class PhoneControllerTest extends WebTestCase
             'CONTENT_TYPE' => 'application/json',
         );
 
-        $crawler = $this->client->request('GET', '/phones', array(), array(), $headers);
+        $this->client->request('GET', '/phones', array(), array(), $headers);
         $datas=$this->client->getResponse();
 
         $this->assertEquals(200, $datas->getStatusCode());
@@ -66,7 +66,7 @@ class PhoneControllerTest extends WebTestCase
             'CONTENT_TYPE' => 'application/json',
         );
 
-        $crawler = $this->client->request('GET', '/phones/2', array(), array(), $headers);
+        $this->client->request('GET', '/phones/2', array(), array(), $headers);
         $datas=$this->client->getResponse();
 
         $this->assertEquals(200, $datas->getStatusCode());

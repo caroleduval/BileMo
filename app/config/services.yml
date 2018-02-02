@@ -23,4 +23,3 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '%user.class%'
-    
