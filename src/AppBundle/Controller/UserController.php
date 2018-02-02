@@ -51,6 +51,7 @@ class UserController extends FOSRestController
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $em)
     {
         $user = $this->getUser();
+
         $id=$user->getClient()->getId();
         $pager = $em->getRepository(User::class)->search(
             $id,
@@ -128,7 +129,7 @@ class UserController extends FOSRestController
      *     )
      * )
      */
-    public function createAction(ParamFetcherInterface $paramFetcher, User $user, EntityManagerInterface $em, ConstraintViolationList $violations, Request $request)
+    public function createAction(ParamFetcherInterface $paramFetcher, User $user, EntityManagerInterface $em, ConstraintViolationList $violations)
     {
         if (count($violations)) {
             $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
@@ -176,13 +177,13 @@ class UserController extends FOSRestController
     public function deleteAction(User $user, EntityManagerInterface $em, Approver $approver)
     {
         if (empty($user)) {
-            return View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+            return $this->view(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
 
         $admin = $this->getUser();
 
         if (!$approver->isGranted($user, $admin)){
-            return View::create(['message' => 'You are not allowed to access this resource'], Response::HTTP_FORBIDDEN);
+            return $this->view(['message' => 'You are not allowed to access this resource'], Response::HTTP_FORBIDDEN);
         }
 
         $em->remove($user);

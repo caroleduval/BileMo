@@ -16,14 +16,6 @@ class ApproverTest extends TestCase
         $this->approver = new Approver();
     }
 
-//    public function isGranted(User $user, User $admin)
-//    {
-//        if ($user->getClient()->getId()==$admin->getClient()->getId()){return true;}
-//        else {return false;}
-//    }
-
-
-
     public function testnotanadmin()
     {
         $user = new User();

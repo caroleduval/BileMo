@@ -2,7 +2,7 @@
 
 namespace AppBundle\Security\Provider;
 
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Serializer\Exception\UnsupportedException;
@@ -28,7 +28,7 @@ class UserProvider implements UserProviderInterface
                 'Unable to find an active User object identified by "%s"',
                 $username
             );
-            throw new UsernameNotFoundException($message, 0, $failed);
+            throw new NotFoundHttpException("Page not found");
         }
         return $user;
     }

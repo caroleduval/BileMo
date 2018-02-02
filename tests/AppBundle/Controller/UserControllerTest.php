@@ -15,7 +15,7 @@ class UserControllerTest extends WebTestCase
 
     private function getToken($oauthHeaders)
     {
-        $crawler = $this->client->request('GET', '/oauth/v2/token', $oauthHeaders);
+        $this->client->request('GET', '/oauth/v2/token', $oauthHeaders);
         $data = $this->client->getResponse()->getContent();
         $json = json_decode($data);
         $accessToken= $json->{'access_token'};
@@ -55,7 +55,7 @@ class UserControllerTest extends WebTestCase
 
     public function testAttemptUserswithoutToken()
     {
-        $crawler = $this->client->request('GET', '/users');
+        $this->client->request('GET', '/users');
         $datas=$this->client->getResponse();
 
         $this->assertEquals(401, $datas->getStatusCode());
@@ -70,10 +70,10 @@ class UserControllerTest extends WebTestCase
             'CONTENT_TYPE' => 'application/json'
         );
 
-        $crawler = $this->client->request('GET', '/users');
+        $this->client->request('GET', '/users', array(), array(), $headers);
         $datas=$this->client->getResponse();
 
-        $this->assertEquals(401, $datas->getStatusCode());
+        $this->assertEquals(403, $datas->getStatusCode());
     }
 
     public function testGetUsersList()
@@ -85,7 +85,7 @@ class UserControllerTest extends WebTestCase
             'CONTENT_TYPE' => 'application/json',
         );
 
-        $crawler = $this->client->request('GET', '/users', array(), array(), $headers);
+        $this->client->request('GET', '/users', array(), array(), $headers);
         $datas=$this->client->getResponse();
 
         $this->assertEquals(200, $datas->getStatusCode());
@@ -103,7 +103,7 @@ class UserControllerTest extends WebTestCase
             'CONTENT_TYPE' => 'application/json',
         );
 
-        $crawler = $this->client->request('GET', '/users/3', array(), array(), $headers);
+        $this->client->request('GET', '/users/3', array(), array(), $headers);
         $datas=$this->client->getResponse();
 
         $this->assertEquals(200, $datas->getStatusCode());
@@ -127,7 +127,7 @@ class UserControllerTest extends WebTestCase
             'CONTENT_TYPE' => 'application/json',
         );
 
-        $crawler = $this->client->request('POST', '/users', array(), array(), $headers, json_encode($data));
+        $this->client->request('POST', '/users', array(), array(), $headers, json_encode($data));
         $datas=$this->client->getResponse();
 
         $this->assertEquals(201, $datas->getStatusCode());
@@ -148,7 +148,7 @@ class UserControllerTest extends WebTestCase
             'CONTENT_TYPE' => 'application/json',
         );
 
-        $crawler = $this->client->request('POST', '/users?role=admin', array(), array(), $headers, json_encode($data));
+        $this->client->request('POST', '/users?role=admin', array(), array(), $headers, json_encode($data));
         $datas=$this->client->getResponse();
 
         $this->assertEquals(201, $datas->getStatusCode());
@@ -163,7 +163,7 @@ class UserControllerTest extends WebTestCase
             'CONTENT_TYPE' => 'application/json',
         );
 
-        $crawler = $this->client->request('DELETE', '/users/6', array(), array(), $headers);
+        $this->client->request('DELETE', '/users/6', array(), array(), $headers);
         $datas=$this->client->getResponse();
 
         $this->assertEquals(204, $datas->getStatusCode());
