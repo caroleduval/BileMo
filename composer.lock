@@ -4,8 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2ce92f58ad3239b51c909e279fedc162",
+    "content-hash": "666338d0c36cf6729bb5a16de677cab7",
     "packages": [
+        {
+            "name": "blackfire/php-sdk",
+            "version": "v1.11.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/blackfireio/php-sdk.git",
+                "reference": "f37f62c2296babaf61f03257b4e9d3c90765a762"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/blackfireio/php-sdk/zipball/f37f62c2296babaf61f03257b4e9d3c90765a762",
+                "reference": "f37f62c2296babaf61f03257b4e9d3c90765a762",
+                "shasum": ""
+            },
+            "require": {
+                "composer/ca-bundle": "^1.0",
+                "php": ">=5.2.0"
+            },
+            "suggest": {
+                "ext-blackfire": "The C version of the Blackfire probe",
+                "ext-zlib": "To push config to remote profiling targets"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.5.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/autostart.php"
+                ],
+                "psr-4": {
+                    "Blackfire\\": "src/Blackfire"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Blackfire.io",
+                    "email": "support@blackfire.io"
+                }
+            ],
+            "description": "Blackfire.io PHP SDK",
+            "keywords": [
+                "performance",
+                "profiler",
+                "uprofiler",
+                "xhprof"
+            ],
+            "time": "2017-12-12T14:19:01+00:00"
+        },
         {
             "name": "composer/ca-bundle",
             "version": "1.1.0",
