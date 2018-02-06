@@ -2,17 +2,29 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Entity\User;
+use AppBundle\Entity\Client;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Client;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserCommand extends ContainerAwareCommand
 {
+    private $em;
+    private $encoder;
+    
+    public function __construct($name = null, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em)
+    {
+        parent::__construct($name);
+        $this->encoder=$encoder;
+        $this->em=$em;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -34,23 +46,22 @@ class UserCommand extends ContainerAwareCommand
         $client_id = $input->getArgument('client');
         $username = $input->getArgument('username');
         $email = $input->getArgument('email');
-        $password = $input->getArgument('password');
+        $plainPassword = $input->getArgument('password');
         $admin = $input->getOption('admin');
-
         $rolesArr=("y"==$admin)?array('ROLE_ADMIN'):array('ROLE_USER');
 
-        $emi = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $client=$emi->getRepository(Client::class)->find($client_id);
+        $client=$this->em->getRepository(Client::class)->find($client_id);
 
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
-        $user->setPassword($password);
+        $encoded = $this->encoder->encodePassword($user, $plainPassword);
+        $user->setPassword($encoded);
         $user->setClient($client);
         $user->setRoles($rolesArr);
 
-        $emi->persist($user);
-        $emi->flush();
+        $this->em->persist($user);
+        $this->em->flush();
 
 
         $output->writeln(sprintf('Created user <comment>%s</comment>', $username));

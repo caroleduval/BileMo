@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -128,7 +129,7 @@ class UserController extends FOSRestController
      *     )
      * )
      */
-    public function createAction(ParamFetcherInterface $paramFetcher, User $user, EntityManagerInterface $emi, ConstraintViolationList $violations)
+    public function createAction(ParamFetcherInterface $paramFetcher, User $user, EntityManagerInterface $emi, ConstraintViolationList $violations, UserPasswordEncoderInterface $encoder)
     {
         if (count($violations)) {
             $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
@@ -143,6 +144,8 @@ class UserController extends FOSRestController
         $type="ROLE_".strtoupper($paramFetcher->get('role'))."";
         $user->setRoles([$type]);
 
+        $encoded = $encoder->encodePassword($user, $user->getPassword());
+        $user->setPassword($encoded);
 
         $emi->persist($user);
         $emi->flush();

@@ -16,11 +16,11 @@ class PhoneControllerTest extends WebTestCase
     private function getToken()
     {
         $oauthHeaders = [
-            "client_id" => "1_45n6woxab000o8oc0w0oksgwo8s44w0wkokkcgsc0kwggos8gk",
-            "client_secret" => "3jzxkn39e3okgs40o48ssg80wgcsww4gwgco8k4ko80g08ows0",
+            "client_id" => "1_4clbzy3w8bgg08cg484oks4os8s4k0cgo0ogcw4ooks8ok8cw4",
+            "client_secret" => "5xm931vihmkgo0k84c844co8gk0k4cs4080w8sgsg44owck800",
             "grant_type" => "password",
             "username" => "Admin_SL",
-            "password" => "motdepasse"
+            "password" => "password"
         ];
 
         $this->client->request('GET', '/oauth/v2/token', $oauthHeaders);

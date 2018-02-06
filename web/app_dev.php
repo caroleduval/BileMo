@@ -1,13 +1,10 @@
 <?php
-
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
-
 // If you don't want to setup permissions the proper way, just uncomment the following PHP line
 // read https://symfony.com/doc/current/setup.html#checking-symfony-application-configuration-and-setup
 // for more information
 //umask(0000);
-
 // This check prevents access to debug front controllers that are deployed by accident to production servers.
 // Feel free to remove this, extend it, or make something more sophisticated.
 if (isset($_SERVER['HTTP_CLIENT_IP'])
@@ -17,23 +14,8 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
     header('HTTP/1.0 403 Forbidden');
     exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
 }
-
 require __DIR__.'/../vendor/autoload.php';
-// If the header is set
-if (isset($_SERVER['HTTP_BLACKFIRETRIGGER'])) {
-    // let's create a client
-    $blackfire = new \Blackfire\Client();
-    // then start the probe
-    $probe = $blackfire->createProbe();
-
-    // When runtime shuts down, let's finish the profiling session
-    register_shutdown_function(function () use ($blackfire, $probe) {
-        // See the PHP SDK documentation for using the $profile object
-        $profile = $blackfire->endProbe($probe);
-    });
-}
 Debug::enable();
-
 $kernel = new AppKernel('dev', true);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();

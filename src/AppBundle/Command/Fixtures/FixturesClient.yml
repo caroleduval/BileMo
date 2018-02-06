@@ -1,11 +1,11 @@
 Client :
     client1:
         name : SoLuxe
-        randomid : 45n6woxab000o8oc0w0oksgwo8s44w0wkokkcgsc0kwggos8gk
-        secret : 3jzxkn39e3okgs40o48ssg80wgcsww4gwgco8k4ko80g08ows0
+        randomid : 4clbzy3w8bgg08cg484oks4os8s4k0cgo0ogcw4ooks8ok8cw4
+        secret : 5xm931vihmkgo0k84c844co8gk0k4cs4080w8sgsg44owck800
         type : ['password']
     client2:
         name : MyPhone
-        randomid : 3yts5mebf8sgcs8k44o04kk4s4cgwccsss084g4gw0socks08s
-        secret : 1tjx88y1m9okckcoo8o8c08gkkow0ssc8gwog00cwsoccko0w0
+        randomid : 5k084ddt78cgg04wks48kss0sc4gwk8c4gck44ckkokkg408ow
+        secret : 2ygvxslzrwo4k4k8ssg4skwks08s04k84c048kc4os4swoskcs
         type : ['password']

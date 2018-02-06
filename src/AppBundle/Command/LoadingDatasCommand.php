@@ -2,16 +2,29 @@
 
 namespace AppBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Phone;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Yaml\Yaml;
+
 
 class LoadingDatasCommand extends ContainerAwareCommand
 {
+    private $em;
+    private $encoder;
+
+    public function __construct($name = null, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em)
+    {
+        parent::__construct($name);
+        $this->encoder=$encoder;
+        $this->em=$em;
+    }
+
     protected function configure()
     {
         $this
@@ -71,7 +84,8 @@ class LoadingDatasCommand extends ContainerAwareCommand
             $linkedClient = $ClientRepo->find($column['client']);
             $user->setClient($linkedClient);
             $user->setEmail($column['email']);
-            $user->setPassword($column['password']);
+            $encoded = $this->encoder->encodePassword($user, $column['password']);
+            $user->setPassword($encoded);
             $user->setRoles($column['roles']);
             $emi->persist($user);
         }
