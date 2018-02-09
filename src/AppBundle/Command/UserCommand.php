@@ -17,12 +17,12 @@ class UserCommand extends ContainerAwareCommand
 {
     private $em;
     private $encoder;
-    
+
     public function __construct($name = null, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em)
     {
         parent::__construct($name);
-        $this->encoder=$encoder;
-        $this->em=$em;
+        $this->encoder = $encoder;
+        $this->em = $em;
     }
 
     /**
@@ -33,24 +33,44 @@ class UserCommand extends ContainerAwareCommand
         $this
             ->setName('BM:user:create')
             ->setDescription('Create a user.')
-            ->addArgument('client', InputArgument::REQUIRED, 'Client_Id ?')
-            ->addArgument('username', InputArgument::REQUIRED, 'Username ?')
-            ->addArgument('email', InputArgument::REQUIRED, 'Email ?')
-            ->addArgument('password', InputArgument::REQUIRED, 'Password ?')
-            ->addOption('admin', null, InputOption::VALUE_NONE, 'Set the user as admin ?', null)
-        ;
+            ->addArgument('client', InputArgument::OPTIONAL, 'Client_Id ?')
+            ->addArgument('username', InputArgument::OPTIONAL, 'Username ?')
+            ->addArgument('email', InputArgument::OPTIONAL, 'Email ?')
+            ->addArgument('password', InputArgument::OPTIONAL, 'Password ?')
+            ->addOption('admin', null, InputOption::VALUE_NONE, 'Set the user as admin ?', null);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $client_id = $input->getArgument('client');
-        $username = $input->getArgument('username');
-        $email = $input->getArgument('email');
-        $plainPassword = $input->getArgument('password');
-        $admin = $input->getOption('admin');
-        $rolesArr=("y"==$admin)?array('ROLE_ADMIN'):array('ROLE_USER');
+        $helper = $this->getHelper('question');
+        $question = new Question('Please enter the client id: ', null);
+        $client_id = $helper->ask($input, $output, $question);
+        if (empty($client_id)) {
+            throw new \Exception('client id can not be empty');
+        }
 
-        $client=$this->em->getRepository(Client::class)->find($client_id);
+        $question = new Question('Please enter the username: ', null);
+        $username = $helper->ask($input, $output, $question);
+        if (empty($username)) {
+            throw new \Exception('username can not be empty');
+        }
+
+        $question = new Question('Please enter the email: ', null);
+        $email = $helper->ask($input, $output, $question);
+        if (empty($email)) {
+            throw new \Exception('email can not be empty');
+        }
+
+        $question = new Question('Please enter the password: ', null);
+        $plainPassword = $helper->ask($input, $output, $question);
+        if (empty($plainPassword)) {
+            throw new \Exception('password can not be empty');
+        }
+
+        $admin = $input->getOption('admin');
+        $rolesArr = ("y" == $admin) ? array('ROLE_ADMIN') : array('ROLE_USER');
+
+        $client = $this->em->getRepository(Client::class)->find($client_id);
 
         $user = new User();
         $user->setUsername($username);
@@ -65,67 +85,5 @@ class UserCommand extends ContainerAwareCommand
 
 
         $output->writeln(sprintf('Created user <comment>%s</comment>', $username));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $questions = array();
-
-        if (!$input->getArgument('client')) {
-            $question = new Question('Please give the client Id:');
-            $question->setValidator(function ($client) {
-                if (empty($client)) {
-                    throw new \Exception('Client can not be empty');
-                }
-
-                return $client;
-            });
-            $questions['client'] = $question;
-        }
-
-        if (!$input->getArgument('username')) {
-            $question = new Question('Please choose a username:');
-            $question->setValidator(function ($username) {
-                if (empty($username)) {
-                    throw new \Exception('Username can not be empty');
-                }
-
-                return $username;
-            });
-            $questions['username'] = $question;
-        }
-
-        if (!$input->getArgument('email')) {
-            $question = new Question('Please choose an email:');
-            $question->setValidator(function ($email) {
-                if (empty($email)) {
-                    throw new \Exception('Email can not be empty');
-                }
-
-                return $email;
-            });
-            $questions['email'] = $question;
-        }
-
-        if (!$input->getArgument('password')) {
-            $question = new Question('Please choose a password:');
-            $question->setValidator(function ($password) {
-                if (empty($password)) {
-                    throw new \Exception('Password can not be empty');
-                }
-
-                return $password;
-            });
-            $question->setHidden(true);
-            $questions['password'] = $question;
-        }
-
-        foreach ($questions as $name => $question) {
-            $answer = $this->getHelper('question')->ask($input, $output, $question);
-            $input->setArgument($name, $answer);
-        }
     }
 }

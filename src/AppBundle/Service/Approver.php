@@ -10,7 +10,7 @@ class Approver
     {
         $bool = false;
 
-        if (in_array('ROLE_ADMIN', $admin->getRoles(), true) AND ($user->getClient()->getId()==$admin->getClient()->getId())){
+        if (in_array('ROLE_ADMIN', $admin->getRoles(), true) && ($user->getClient()->getId()==$admin->getClient()->getId())){
             return true;
         }
 

@@ -222,7 +222,7 @@ class Phone
     /**
      * Set storage
      *
-     * @param string $storage
+     * @param integer $storage
      *
      * @return Phone
      */

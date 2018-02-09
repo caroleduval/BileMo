@@ -15,7 +15,7 @@ class ClientCreateCommand extends ContainerAwareCommand
         $this
             ->setName('BM:client:create')
             ->setDescription('Creates a new client')
-            ->addArgument('name', InputArgument::REQUIRED, 'Sets the client name', null)
+            ->addArgument('name', InputArgument::OPTIONAL, 'Sets the client name', null)
         ;
     }
 
@@ -23,35 +23,18 @@ class ClientCreateCommand extends ContainerAwareCommand
     {
         $clientManager = $this->getContainer()->get('fos_oauth_server.client_manager.default');
         $client = $clientManager->createClient();
-        $client->setName($input->getArgument('name'));
+
+        $helper = $this->getHelper('question');
+        $question = new Question('Please enter the name of the client: ', null);
+        $name = $helper->ask($input, $output, $question);
+        if (empty($name)) {
+            throw new \Exception('Name can not be empty');
+        }
+
+        $client->setName($name);
         $clientManager->updateClient($client);
         $output->writeln(sprintf('Added a new client with name : <info>%s</info>', $client->getName()));
         $output->writeln(sprintf('Public id :<info>%s</info>', $client->getPublicId()));
         $output->writeln(sprintf('Secret :<info>%s</info>', $client->getSecret()));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $questions = array();
-
-        if (!$input->getArgument('name')) {
-            $question = new Question('Please enter the client name:');
-            $question->setValidator(function ($name) {
-                if (empty($name)) {
-                    throw new \Exception('Name can not be empty');
-                }
-
-                return $name;
-            });
-            $questions['name'] = $question;
-        }
-
-        foreach ($questions as $zame => $question) {
-            $answer = $this->getHelper('question')->ask($input, $output, $question);
-            $input->setArgument($zame, $answer);
-        }
     }
 }

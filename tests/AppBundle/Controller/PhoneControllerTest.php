@@ -8,18 +8,21 @@ class PhoneControllerTest extends WebTestCase
 {
     private $client = null;
 
+    private $accessToken = null;
+
     public function setUp()
     {
         $this->client = static::createClient();
+        $this->accessToken = $this->getToken();
     }
 
-    private function getToken()
+    private function getToken($user="Admin_SL")
     {
         $oauthHeaders = [
             "client_id" => "1_4clbzy3w8bgg08cg484oks4os8s4k0cgo0ogcw4ooks8ok8cw4",
             "client_secret" => "5xm931vihmkgo0k84c844co8gk0k4cs4080w8sgsg44owck800",
             "grant_type" => "password",
-            "username" => "Admin_SL",
+            "username" => $user,
             "password" => "password"
         ];
 
@@ -41,10 +44,8 @@ class PhoneControllerTest extends WebTestCase
 
     public function testGetPhonesList()
     {
-        $accessToken = $this->getToken();
-
         $headers = array(
-            'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
+            'HTTP_AUTHORIZATION' => "Bearer {$this->accessToken}",
             'CONTENT_TYPE' => 'application/json',
         );
 
@@ -59,10 +60,8 @@ class PhoneControllerTest extends WebTestCase
 
     public function testGetPhone()
     {
-        $accessToken = $this->getToken();
-
         $headers = array(
-            'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
+            'HTTP_AUTHORIZATION' => "Bearer {$this->accessToken}",
             'CONTENT_TYPE' => 'application/json',
         );
 

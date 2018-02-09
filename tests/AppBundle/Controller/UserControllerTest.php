@@ -13,42 +13,20 @@ class UserControllerTest extends WebTestCase
         $this->client = static::createClient();
     }
 
-    private function getToken($oauthHeaders)
+    private function getToken($user="Admin_SL")
     {
+        $oauthHeaders = [
+            "client_id" => "1_4clbzy3w8bgg08cg484oks4os8s4k0cgo0ogcw4ooks8ok8cw4",
+            "client_secret" => "5xm931vihmkgo0k84c844co8gk0k4cs4080w8sgsg44owck800",
+            "grant_type" => "password",
+            "username" => $user,
+            "password" => "password"
+        ];
+
         $this->client->request('GET', '/oauth/v2/token', $oauthHeaders);
         $data = $this->client->getResponse()->getContent();
         $json = json_decode($data);
         $accessToken= $json->{'access_token'};
-
-        return $accessToken;
-    }
-
-    private function getTokenAsAdmin()
-    {
-        $oauthHeaders = [
-            "client_id" => "1_4clbzy3w8bgg08cg484oks4os8s4k0cgo0ogcw4ooks8ok8cw4",
-            "client_secret" => "5xm931vihmkgo0k84c844co8gk0k4cs4080w8sgsg44owck800",
-            "grant_type" => "password",
-            "username" => "Admin_SL",
-            "password" => "password"
-        ];
-
-        $accessToken=$this->getToken($oauthHeaders);
-
-        return $accessToken;
-    }
-
-    private function getTokenAsUser()
-    {
-        $oauthHeaders = [
-            "client_id" => "1_4clbzy3w8bgg08cg484oks4os8s4k0cgo0ogcw4ooks8ok8cw4",
-            "client_secret" => "5xm931vihmkgo0k84c844co8gk0k4cs4080w8sgsg44owck800",
-            "grant_type" => "password",
-            "username" => "User_SoLuxe1",
-            "password" => "password"
-        ];
-
-        $accessToken=$this->getToken($oauthHeaders);
 
         return $accessToken;
     }
@@ -63,7 +41,7 @@ class UserControllerTest extends WebTestCase
 
     public function testAttemptUsersAsUser()
     {
-        $accessToken = $this->getTokenAsUser();
+        $accessToken = $this->getToken("User_SoLuxe1");
 
         $headers = array(
             'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
@@ -78,7 +56,7 @@ class UserControllerTest extends WebTestCase
 
     public function testGetUsersList()
     {
-        $accessToken = $this->getTokenAsAdmin();
+        $accessToken = $this->getToken();
 
         $headers = array(
             'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
@@ -96,7 +74,7 @@ class UserControllerTest extends WebTestCase
 
     public function testGetUser()
     {
-        $accessToken = $this->getTokenAsAdmin();
+        $accessToken = $this->getToken();
 
         $headers = array(
             'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
@@ -120,7 +98,7 @@ class UserControllerTest extends WebTestCase
             'password'=> 'motdepasse'
         );
 
-        $accessToken = $this->getTokenAsAdmin();
+        $accessToken = $this->getToken();
 
         $headers = array(
             'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
@@ -141,7 +119,7 @@ class UserControllerTest extends WebTestCase
             'password'=> 'motdepasse'
         );
 
-        $accessToken = $this->getTokenAsAdmin();
+        $accessToken = $this->getToken();
 
         $headers = array(
             'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
@@ -156,7 +134,7 @@ class UserControllerTest extends WebTestCase
 
     public function testDeleteUser()
     {
-        $accessToken = $this->getTokenAsAdmin();
+        $accessToken = $this->getToken();
 
         $headers = array(
             'HTTP_AUTHORIZATION' => "Bearer {$accessToken}",
