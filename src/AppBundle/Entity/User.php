@@ -66,7 +66,7 @@ class User implements UserInterface, \Serializable
      *
      * @Assert\NotBlank()
      *
-     * @Serializer\Groups({"list","details"})
+     * @Serializer\Groups({"list","details","register"})
      *
      */
     private $username;
@@ -76,7 +76,7 @@ class User implements UserInterface, \Serializable
      *
      * @Assert\Email(message = "The email '{{ value }}' is not a valid email.")
      *
-     * @Serializer\Groups({"details"})
+     * @Serializer\Groups({"details","register"})
      */
     private $email;
 
@@ -85,12 +85,13 @@ class User implements UserInterface, \Serializable
      *
      * @Assert\NotBlank()
      *
-     * @Serializer\Groups({"none"})
+     * @Serializer\Groups({"none","register"})
      */
     private $password;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
      *
      * @Serializer\Groups({"none"})
      *

@@ -39,6 +39,15 @@ class PhoneController extends FOSRestController
      * )
      * @Rest\View(serializerGroups ={"Default","list"})
      *
+     * @SWG\Tag(name="phones")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the list of available phones",
+     *     @SWG\Schema(
+     *         type="object",
+     *         @Model(type=Phone::class)
+     *     )
+     * )
      * @Cache(smaxage="3600", public=true)
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $emi)
@@ -71,7 +80,7 @@ class PhoneController extends FOSRestController
      * @SWG\Tag(name="phones")
      * @SWG\Response(
      *     response=200,
-     *     description="Returns the details of a phone",
+     *     description="Returns the details of a phone, identified by his identification number in the database",
      *     @SWG\Schema(
      *         type="object",
      *         @Model(type=Phone::class)
@@ -82,7 +91,7 @@ class PhoneController extends FOSRestController
     public function showAction(Phone $phone=null)
     {
         if (empty($phone)) {
-            return $this->view(['message' => 'Phone not found'], Response::HTTP_NOT_FOUND);
+            return $this->view(['message' => 'Sorry, this phone is not available'], Response::HTTP_NOT_FOUND);
         }
         return $phone;
     }

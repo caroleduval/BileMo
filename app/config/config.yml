@@ -115,3 +115,4 @@ nelmio_api_doc:
                 name: Authorization
         security:
             - bearerAuth: []
+

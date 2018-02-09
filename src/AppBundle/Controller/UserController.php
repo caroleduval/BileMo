@@ -46,6 +46,15 @@ class UserController extends FOSRestController
      * )
      * @Rest\View(serializerGroups ={"Default","list"})
      *
+     * @SWG\Tag(name="users")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the list of users, linked to a client",
+     *     @SWG\Schema(
+     *         type="object",
+     *         @Model(type=User::class)
+     *     )
+     * )
      * @Cache(smaxage="3600", public=true)
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request, EntityManagerInterface $emi)
@@ -93,7 +102,7 @@ class UserController extends FOSRestController
     public function showAction(User $user=null, Approver $approver)
     {
         if (empty($user)) {
-            return $this->view(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+            return $this->view(['message' => 'Sorry, this user is not available'], Response::HTTP_NOT_FOUND);
          }
 
         $admin = $this->getUser();
@@ -120,6 +129,17 @@ class UserController extends FOSRestController
      * @ParamConverter("user", converter="fos_rest.request_body")
      *
      * @SWG\Tag(name="users")
+     * @SWG\Parameter(
+     *     name="user",
+     *     in="body",
+     *     description= "user to add to the system",
+     *     required= true,
+     *     @SWG\Schema(
+     *      @SWG\Property(property="username",  type="string",),
+     *     @SWG\Property(property="email",  type="string",),
+     *     @SWG\Property(property="password",  type="string",)
+     *     )
+     * )
      * @SWG\Response(
      *     response=201,
      *     description="Create a user linked to a client",
@@ -169,17 +189,13 @@ class UserController extends FOSRestController
      * @SWG\Tag(name="users")
      * @SWG\Response(
      *     response=204,
-     *     description="Delete a user linked to a client",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=User::class)
-     *     )
+     *     description="Delete a user linked to a client"
      * )
      */
-    public function deleteAction(User $user, EntityManagerInterface $emi, Approver $approver)
+    public function deleteAction(User $user=null, EntityManagerInterface $emi, Approver $approver)
     {
         if (empty($user)) {
-            return $this->view(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+            return $this->view(['message' => 'Sorry, this user is not available'], Response::HTTP_NOT_FOUND);
         }
 
         $admin = $this->getUser();

@@ -80,7 +80,7 @@ class Phone
     /**
      * @var string
      *
-     * @ORM\Column(name="op_system", type="string", length=10)
+     * @ORM\Column(name="op_system", type="string", length=25)
      *
      * @Serializer\Groups({"details"})
      */
