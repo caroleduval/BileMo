@@ -2,11 +2,11 @@
 
 namespace AppBundle\Security\Provider;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Serializer\Exception\UnsupportedException;
-use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserProvider implements UserProviderInterface
 {

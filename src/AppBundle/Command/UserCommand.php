@@ -70,7 +70,7 @@ class UserCommand extends ContainerAwareCommand
         $admin = $input->getOption('admin');
         $rolesArr = ("y" == $admin) ? array('ROLE_ADMIN') : array('ROLE_USER');
 
-        $client = $this->em->getRepository(Client::class)->find($client_id);
+        $client=$this->em->getRepository(Client::class)->find($client_id);
 
         $user = new User();
         $user->setUsername($username);

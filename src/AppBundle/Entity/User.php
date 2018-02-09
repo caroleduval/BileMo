@@ -196,7 +196,7 @@ class User implements UserInterface, \Serializable
         return $this;
     }
     /**
-     * @return mixed
+     * @return Client $client
      */
     public function getClient()
     {
