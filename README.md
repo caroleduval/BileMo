@@ -35,3 +35,6 @@ MySQL   5.6.38
 - open [http://localhost/BileMo/web/app_dev.php] on your Postman
 
 It's now OK !
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e36bfa0c493446c8b12b72944184440e)](https://www.codacy.com/app/caroleduval/BileMo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=caroleduval/BileMo&amp;utm_campaign=Badge_Grade)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/caroleduval/BileMo/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/caroleduval/BileMo/?branch=master)
