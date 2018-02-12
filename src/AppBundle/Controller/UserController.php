@@ -136,8 +136,8 @@ class UserController extends FOSRestController
      *     required= true,
      *     @SWG\Schema(
      *      @SWG\Property(property="username",  type="string",),
-     *     @SWG\Property(property="email",  type="string",),
-     *     @SWG\Property(property="password",  type="string",)
+     *      @SWG\Property(property="email",  type="string",),
+     *      @SWG\Property(property="password",  type="string",)
      *     )
      * )
      * @SWG\Response(

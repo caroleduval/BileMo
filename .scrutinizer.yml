@@ -4,5 +4,4 @@ checks:
         - symfony
 
 filter:
-    paths: ["src/*","tests"]
-    
+    paths: ["src/*","tests/*"]

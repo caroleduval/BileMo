@@ -2,10 +2,11 @@
 
 namespace AppBundle\Security\Provider;
 
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Serializer\Exception\UnsupportedException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserProvider implements UserProviderInterface
@@ -35,22 +36,17 @@ class UserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        $class = get_class($user);
-        if (false === $this->supportsClass($class)) {
-            throw new UnsupportedException(
-                sprintf(
-                    'Instances of "%s" are not supported',
-                    $class
-                )
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(
+                sprintf('Instances of "%s" are not supported.', get_class($user))
             );
         }
-        return $this->userRepository->find($user->getId());
+
+        return $this->loadUserByUsername($user->getUsername());
     }
 
     public function supportsClass($class)
     {
-        return $this->class === $class
-            || is_subclass_of($class, $this->class);
-
+        return User::class === $class;
     }
 }
