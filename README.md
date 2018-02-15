@@ -42,4 +42,4 @@ https://blackfire.io/profiles/db763bdc-cd2a-4169-ba8f-7eb46c6ad185/graph
 Quality analysis :
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e36bfa0c493446c8b12b72944184440e)](https://www.codacy.com/app/caroleduval/BileMo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=caroleduval/BileMo&amp;utm_campaign=Badge_Grade)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/caroleduval/BileMo/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/caroleduval/BileMo/?branch=master)
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/5b89e61b1a2c14536d5f/maintainability)](https://codeclimate.com/github/caroleduval/BileMo/maintainability)
